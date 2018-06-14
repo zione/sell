@@ -1,10 +1,10 @@
 <template>
   <div>
-    <home-header></home-header>
+    <home-header :city="city"></home-header>
     <home-swiper :list="swiperList"></home-swiper>
     <home-icons :list="iconList"></home-icons>
-    <home-recommend></home-recommend>
-    <home-weekend></home-weekend>
+    <home-recommend :list="recommendList"></home-recommend>
+    <home-weekend :list="weekendList"></home-weekend>
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import HomeSwiper from './components/Swiper'
 import HomeIcons from './components/Icons'
 import HomeRecommend from './components/Recommend'
 import HomeWeekend from './components/Weekend'
+import axios from 'axios'
 export default {
   name: 'Home',
   components: {
@@ -25,55 +26,31 @@ export default {
   },
   data () {
     return {
-      swiperList: [{
-        id: '0001',
-        imgUrl: 'https://imgs.qunarzz.com/p/tts3/1703/e3/3d71ff582f05e802.jpg_r_390x260x90_7c8b1419.jpg'
-      },
-      {
-        id: '0002',
-        imgUrl: 'https://imgs.qunarzz.com/p/tts0/1511/60/4b101da07eb663f7.jpg_r_390x260x90_ce705dbf.jpg'
-      }],
-      iconList: [{
-        id: '0000',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '新马泰缅甸一日游'
-      }, {
-        id: '0001',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0002',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0003',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0004',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0005',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0006',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0007',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0008',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }, {
-        id: '0009',
-        imgUrl: 'http://img1.qunarzz.com/piao/fusion/1611/a9/ffc620dbda9b9c02.png',
-        desc: '一日游'
-      }]
+      city: '',
+      swiperList: [],
+      iconList: [],
+      recommendList: [],
+      weekendList: []
+    }
+  },
+  mounted: function () {
+    this.getHomeInfo()
+  },
+  methods: {
+    getHomeInfo () {
+      axios.get('/api/index.json')
+        .then(this.getHomeInfoSucc)
+    },
+    getHomeInfoSucc (res) {
+      res = res.data
+      if (res.ret && res.data) {
+        const data = res.data
+        this.city = data.city
+        this.swiperList = data.swiperList
+        this.iconList = data.iconList
+        this.recommendList = data.recommendList
+        this.weekendList = data.weekendList
+      }
     }
   }
 }
